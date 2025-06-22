@@ -65,4 +65,5 @@ Whether you're living on campus or managing funds from multiple sources, **Stash
 ---
 
 ## 📁 Project Structure (Planned)
+- To be updated :-)
 
