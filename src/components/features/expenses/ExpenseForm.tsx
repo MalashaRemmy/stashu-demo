@@ -1,0 +1,183 @@
+import { useForm } from 'react-hook-form';
+import { ExpenseFormValues, ExpenseCategory, ExpenseFrequency } from '../../../types/expense';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button }  from '../../ui/Button';
+import Input from '../../ui/Input';
+import { Card } from '../../ui/Card';
+import Select from '../../ui/Select';
+
+export default function RegisterForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    
+    try {
+      // TODO: Replace with actual API call
+      // const response = await registerUser(formData);
+      console.log('Registration attempt:', formData);
+      navigate('/dashboard');
+    } catch (err: unknown) {
+      console.error('Registration error:', err);
+      setError('Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Card className="max-w-md w-full p-8">
+      <h2 className="text-2xl font-bold text-center mb-6 text-blue-800">Create Account</h2>
+      {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          label="Full Name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+        <Input
+          label="Email"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        <Input
+          label="Password"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+          minLength={6}
+        />
+        <Input
+          label="Confirm Password"
+          type="password"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          required
+        />
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? 'Registering...' : 'Register'}
+        </Button>
+      </form>
+      <div className="mt-4 text-center">
+        <button 
+          onClick={() => navigate('/login')}
+          className="text-blue-600 hover:underline"
+        >
+          Already have an account? Login
+        </button>
+      </div>
+    </Card>
+  );
+}
+
+const categories: ExpenseCategory[] = [
+  'Food', 'Housing', 'Transportation', 
+  'Utilities', 'Healthcare', 'Education',
+  'Entertainment', 'Personal', 'Subscriptions', 'Other'
+];
+
+const frequencies: ExpenseFrequency[] = [
+  'one-time', 'daily', 'weekly',
+  'bi-weekly', 'monthly', 'quarterly', 'yearly'
+];
+
+interface ExpenseFormProps {
+  onSubmit: (data: ExpenseFormValues) => void;
+  initialData?: Partial<ExpenseFormValues>;
+  isLoading?: boolean;
+}
+
+export const ExpenseForm = ({ 
+  onSubmit,
+  initialData,
+  isLoading
+}: ExpenseFormProps) => {
+  const { 
+    register, 
+    handleSubmit, 
+    formState: { errors } 
+  } = useForm<ExpenseFormValues>({
+    defaultValues: initialData
+  });
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <Input
+        label="Amount"
+        type="number"
+        step="0.01"
+        {...register('amount', { 
+          required: 'Amount is required', 
+          min: { value: 0.01, message: 'Amount must be positive' }
+        })}
+        error={errors.amount?.message}
+      />
+
+      <Select
+        label="Category"
+        options={categories.map(c => ({ value: c, label: c }))}
+        {...register('category', { required: 'Category is required' })}
+        error={errors.category?.message}
+      />
+
+      <Select
+        label="Frequency"
+        options={frequencies.map(f => ({ 
+          value: f, 
+          label: f.charAt(0).toUpperCase() + f.slice(1) 
+        }))}
+        {...register('frequency', { required: 'Frequency is required' })}
+        error={errors.frequency?.message}
+      />
+
+      <Input
+        label="Date"
+        type="date"
+        {...register('date', { required: 'Date is required' })}
+        error={errors.date?.message}
+      />
+
+      <Input
+        label="Description (optional)"
+        {...register('description')}
+      />
+
+      <Button 
+        type="submit" 
+        disabled={isLoading}
+      >
+        {initialData ? 'Update Expense' : 'Add Expense'}
+      </Button>
+    </form>
+  );
+};
