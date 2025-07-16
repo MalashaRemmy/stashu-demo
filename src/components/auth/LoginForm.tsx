@@ -1,169 +1,99 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '../ui/Button';
-import Input from '../ui/Input';
-import { Card } from '../ui/Card';
+import { Link } from 'react-router-dom';
+import { FaFacebook, FaGoogle, FaTwitter } from 'react-icons/fa';
 
-export function RegisterForm() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+type AuthFormProps = {
+  onSwitchMode: () => void;
+  // Add other props if needed
+};
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-    
-    try {
-      // TODO: Replace with actual API call
-      // const response = await registerUser(formData);
-      console.log('Registration attempt:', formData);
-      navigate('/dashboard');
-    } catch (err: unknown) {
-      console.error('Registration error:', err);
-      setError('Registration failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+export default function LoginForm({ onSwitchMode }: AuthFormProps) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+  
   return (
-    <Card className="max-w-md w-full p-8">
-      <h2 className="text-2xl font-bold text-center mb-6 text-blue-800">Create Account</h2>
-      {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          label="Full Name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          label="Email"
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          label="Password"
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          minLength={6}
-        />
-        <Input
-          label="Confirm Password"
-          type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-        />
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Registering...' : 'Register'}
-        </Button>
-      </form>
-      <div className="mt-4 text-center">
-        <button 
-          onClick={() => navigate('/login')}
-          className="text-blue-600 hover:underline"
-        >
-          Already have an account? Login
-        </button>
+    <div className="auth-container">
+      <div className="auth-illustration">
+        <div className="illustration-content">
+          <h1>Finance Tracking</h1>
+          <img 
+            src="https://illustrations.popsy.co/amber/digital-nomad.svg" 
+            alt="Personal Finance" 
+            className="auth-image"
+          />
+          <p className="illustration-text">
+            Track your expenses, manage budgets, and achieve your financial goals
+          </p>
+        </div>
       </div>
-    </Card>
-  );
-}
 
-export default function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+      <div className="auth-form-container">
+        <div className="auth-form">
+          <div className="form-header">
+            <h2>Welcome Back</h2>
+            <p>Sign in to continue your financial journey</p>
+          </div>
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    
-    try {
-      // TODO: Replace with actual API call
-      // const response = await loginUser({ email, password });
-      console.log('Login attempt:', { email, password });
-      navigate('/dashboard');
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message || 'Invalid email or password');
-      } else {
-        setError('An unknown error occurred');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+          <form className="login-form">
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="form-input"
+              />
+            </div>
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="form-input"
+              />
+              <Link to="/forgot-password" className="forgot-password">
+                Forgot password?
+              </Link>
+            </div>
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+            <button type="submit" className="auth-button primary">
+              Sign In
+            </button>
 
-  return (
-    <Card className="max-w-md w-full p-8">
-      <h2 className="text-2xl font-bold text-center mb-6 text-blue-800">Login to StashU</h2>
-      {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          label="Email"
-          type="email"
-          value={email}
-          onChange={handleEmailChange}
-          required
-        />
-        <Input
-          label="Password"
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-          required
-        />
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
-        </Button>
-      </form>
-      <div className="mt-4 text-center">
-        <button 
-          onClick={() => navigate('/register')}
-          className="text-blue-600 hover:underline"
-        >
-          Don't have an account? Register
-        </button>
+            <div className="social-divider">
+              <span>Or sign in with</span>
+            </div>
+
+            <div className="social-buttons">
+              <button type="button" className="social-button facebook">
+                <FaFacebook className="social-icon" />
+                Facebook
+              </button>
+              <button type="button" className="social-button google">
+                <FaGoogle className="social-icon" />
+                Google
+              </button>
+              <button type="button" className="social-button twitter">
+                <FaTwitter className="social-icon" />
+                Twitter
+              </button>
+            </div>
+
+            <div className="auth-footer">
+              Don't have an account?{' '}
+              <Link to="/register" className="auth-link">
+                Sign Up
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
-    </Card>
+    </div>
   );
 }

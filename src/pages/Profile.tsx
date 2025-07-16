@@ -1,4 +1,4 @@
-import { useAuth } from '../components/lib/hooks/useAuth';
+import { useAuth } from '../lib/hooks/useAuth';
 import { Button, Input } from '../components/ui';
 import { Card } from '../components/ui/Card';
 import { useNavigate } from 'react-router-dom';

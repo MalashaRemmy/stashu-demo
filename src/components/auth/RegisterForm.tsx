@@ -1,10 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button }  from '../ui/Button';
+import { Button } from '../ui/Button';
 import Input from '../ui/Input';
 import { Card } from '../ui/Card';
 
-export default function RegisterForm() {
+type RegisterFormProps = {
+  onSwitchMode: () => void;
+  // other register-specific props
+};
+
+export default function RegisterForm({ onSwitchMode }: RegisterFormProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -81,13 +86,14 @@ export default function RegisterForm() {
           onChange={handleChange}
           required
         />
+      
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? 'Registering...' : 'Register'}
         </Button>
       </form>
       <div className="mt-4 text-center">
         <button 
-          onClick={() => navigate('/login')}
+          onClick={onSwitchMode}
           className="text-blue-600 hover:underline"
         >
           Already have an account? Login

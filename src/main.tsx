@@ -1,10 +1,12 @@
+
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { store } from './components/store'
 import App from './App'
-import './index.css'
+import globals from '../assets/styles/globals.css';
 import { AuthProvider } from './context/AuthContext';
+
 // main.tsx
 import './assets/fonts/font-face.css';
 

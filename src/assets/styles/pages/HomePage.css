@@ -1,0 +1,17 @@
+.hero {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e6e9f2 100%);
+}
+
+.hero-content {
+  max-width: 600px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 3rem 0;
+}

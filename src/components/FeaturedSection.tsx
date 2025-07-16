@@ -1,10 +1,20 @@
-// src/components/FeaturedSection.tsx
-export default function FeaturedSection() {
+interface FeaturedSectionProps {
+  icon?: string;    // Make optional if not always needed
+  title: string;
+  description: string;
+}
+
+export default function FeaturedSection({ 
+  icon, 
+  title, 
+  description 
+}: FeaturedSectionProps) {
   return (
     <section className="featured-section">
-      <h3>Featured Items</h3>
+      {icon && <img src={icon} alt={title} className="featured-icon" />}
+      <h3>{title}</h3>
       <div className="featured-content">
-        <p>Check out our special offers this week!</p>
+        <p>{description}</p>
         {/* Add your featured items here */}
       </div>
     </section>
