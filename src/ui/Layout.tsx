@@ -1,14 +1,14 @@
 import React, { Suspense } from 'react';
 import { Outlet, useLocation, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '../app/store';
+//import { RootState } from 'react-router-dom';
 import { Navbar, Sidebar, Notification, LoadingSpinner } from './index';
 
 const publicRoutes = ['/login', '/register'];
 
 export default function Layout() {
   const location = useLocation();
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: any) => state.auth);
   
   // Redirect to login if not authenticated and trying to access protected route
   if (!isAuthenticated && !publicRoutes.includes(location.pathname)) {

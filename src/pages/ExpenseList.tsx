@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Expense } from '../types/expense';
-import { formatCurrency, formatDate } from '../components/lib/utils/formatters';
+import { formatCurrency } from '../lib/utils/currencyFormatter';
+import { formatDate } from '../lib/utils/dateUtils';
 import { Button } from '../components/ui/Button';
 
 // This file define the Exponses list component which displays a list of expenses 

@@ -1,24 +1,2076 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/stashu.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stashu</title>
-  </head>
-  <body>
-    <div id="modal-root"></div>
-    <div id="toast-root"></div>
-    <div id="context-menu-root"></div>
-    <div id="notification-root"></div>
-    <div id="sidebar-root"></div>
-    <div id="settings-root"></div>
-    <div id="search-root"></div>
-    <div id="player-root"></div>
-    <div id="playlist-root"></div>
-    <div id="library-root"></div>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="StashU - Your College Finance Tracker">
+    <meta name="keywords" content="college, finance, tracker, budget, expenses, savings, goals">
+    <meta name="author" content="StashU Team">
+    <meta name="theme-color" content="#4361ee">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="icon" type="image/png" href="/stashu.png">
+    <link rel="manifest" href="/manifest.json">
+    <title>Stash-demo</title>
+
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/themes/material_blue.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.min.css">
+
+    <!-- JS Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/flatpickr.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #ef233c;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --gray: #adb5bd;
+            --border: #dee2e6;
+            --background: #f5f7fa;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --font-family: 'Poppins', sans-serif;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+            transition: var(--transition);
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--gray);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            border: none;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Layout Components */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand i {
+            margin-right: 0.5rem;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 8rem 0 5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="white"></path><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="white"></path><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="white"></path></svg>');
+            background-size: cover;
+            transform: rotate(180deg);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            animation: fadeInUp 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .hero-image {
+            margin-top: 3rem;
+            animation: fadeIn 1s ease 0.6s forwards;
+            opacity: 0;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            height: 100%;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--box-shadow);
+            border-color: transparent;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Auth Container */
+        .auth-container {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: row;
+            background: var(--background);
+        }
+
+        .auth-illustration {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-illustration::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: bottom;
+            opacity: 0.5;
+        }
+
+        .auth-illustration img {
+            max-width: 80%;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            animation: bounce 3s infinite;
+        }
+
+        .auth-illustration h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-illustration p {
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            max-width: 80%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-form-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .auth-form {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2.5rem;
+            animation: fadeInRight 0.8s ease;
+        }
+
+        .auth-form h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.75rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Social Auth */
+        .social-auth {
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .social-text {
+            position: relative;
+            margin: 1.5rem 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .social-text::before,
+        .social-text::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .social-text::before {
+            left: 0;
+        }
+
+        .social-text::after {
+            right: 0;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            background: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            height: 100vh;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            z-index: 100;
+            border-right: 1px solid var(--border);
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+            margin-right: 0.75rem;
+        }
+
+        .sidebar-header h3 {
+            color: var(--primary);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            background: var(--background);
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem 1.5rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 0;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .welcome-message {
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Dashboard Cards */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: none;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0;
+        }
+
+        .card-actions a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .card-actions a:hover {
+            text-decoration: underline;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        /* Transactions Table */
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transaction-table th, 
+        .transaction-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .transaction-table th {
+            font-weight: 600;
+            color: var(--dark);
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        .transaction-table tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .transaction-category {
+            display: flex;
+            align-items: center;
+        }
+
+        .category-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .income {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .expense {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1000;
+                background: white;
+                height: 100vh;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                color: var(--dark);
+                cursor: pointer;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+            }
+
+            .auth-illustration {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        /* Overlay for mobile menu */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--dark);
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Form validation */
+        .is-invalid {
+            border-color: var(--danger) !important;
+        }
+        
+        .invalid-feedback {
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg" id="navbar" style="background: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-money-bill-wave"></i> StashU
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+            </button>
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-section="home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features" data-section="features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about" data-section="about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact" data-section="contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#faqs" data-section="faqs">FAQs</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="#" class="btn btn-outline btn-lg" id="showAuth">Get Started <i class="fas fa-arrow-right ms-2"></i></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Overlay for mobile menu -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Home/Landing Page -->
+    <div id="landingPage">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">Take Control of Your College Finances</h1>
+                    <p class="hero-subtitle">StashU helps you track expenses, budget smarter, and achieve your financial goals with ease.</p>
+                    <div class="hero-buttons">
+                        <a href="#" class="btn btn-primary btn-lg" id="showSignup">Get Started <i class="fas fa-arrow-right ms-2"></i></a>
+                        <a href="#features" class="btn btn-outline btn-lg" id="showFeatures">Learn More</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Student Finance">
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Powerful Features</h2>
+                    <p>Everything you need to manage your college finances in one place</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <h3>Budget Tracking</h3>
+                            <p>Create and manage budgets for different categories to stay on top of your spending.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <h3>Savings Goals</h3>
+                            <p>Set financial goals and track your progress towards achieving them.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <h3>Smart Alerts</h3>
+                            <p>Get notified when you're approaching budget limits or when bills are due.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Authentication Section -->
+    <div class="auth-container" id="authContainer" style="display: none;">
+        <div class="auth-illustration">
+            <img src="https://illustrations.popsy.co/amber/mobile-payments.svg" alt="Finance Tracking">
+            <h2>Join Thousands of Students</h2>
+            <p>Start managing your college finances the smart way today</p>
+        </div>
+        <div class="auth-form-container">
+            <div class="auth-form" id="loginFormElement">
+                <h2>Welcome Back</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email" required>
+                        <div class="invalid-feedback" id="loginEmailError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
+                        <div class="invalid-feedback" id="loginPasswordError"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                    
+                    <div class="social-auth">
+                        <p class="social-text">Or sign in with</p>
+                        <div class="social-icons">
+                            <a href="#" class="social-icon" style="background:conic-gradient(from -45deg,#ea4335 0deg 90deg,#4285f4 90deg 180deg,#34a853 180deg 270deg,#fbbc05 270deg 360deg);">
+                                <i class="fab fa-google" style="color:white;"></i>
+                            </a>
+                            <a href="#" class="social-icon" style="background:#1877F2;">
+                                <i class="fab fa-facebook-f" style="color:white;"></i>
+                            </a>
+                            <a href="#" class="social-icon" style="background:#25D366;">
+                                <i class="fab fa-whatsapp" style="color:white;"></i>
+                            </a>
+                            <a href="#" class="social-icon" style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);">
+                                <i class="fab fa-instagram" style="color:white;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="#" id="showSignupBtn">Sign Up</a></p>
+                </div>
+            </div>
+
+            <div class="auth-form" id="signupFormElement" style="display: none;">
+                <h2>Create Account</h2>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" class="form-control" placeholder="Enter your full name" required>
+                        <div class="invalid-feedback" id="signupNameError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" class="form-control" placeholder="Enter your email" required>
+                        <div class="invalid-feedback" id="signupEmailError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" class="form-control" placeholder="Create a password" required>
+                        <div class="invalid-feedback" id="signupPasswordError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupConfirmPassword">Confirm Password</label>
+                        <input type="password" id="signupConfirmPassword" class="form-control" placeholder="Confirm your password" required>
+                        <div class="invalid-feedback" id="signupConfirmPasswordError"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                    
+                    <div class="social-auth">
+                        <p class="social-text">Or sign up with</p>
+                        <div class="social-icons">
+                            <a href="#" class="social-icon" style="background:conic-gradient(from -45deg,#ea4335 0deg 90deg,#4285f4 90deg 180deg,#34a853 180deg 270deg,#fbbc05 270deg 360deg);">
+                                <i class="fab fa-google" style="color:white;"></i>
+                            </a>
+                            <a href="#" class="social-icon" style="background:#1877F2;">
+                                <i class="fab fa-facebook-f" style="color:white;"></i>
+                            </a>
+                            <a href="#" class="social-icon" style="background:#25D366;">
+                                <i class="fab fa-whatsapp" style="color:white;"></i>
+                            </a>
+                            <a href="#" class="social-icon" style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);">
+                                <i class="fab fa-instagram" style="color:white;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="#" id="showLoginBtn">Sign In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div class="dashboard" id="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-piggy-bank"></i> StashU</h3>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#" class="nav-link active" data-section="overview"><i class="fas fa-home"></i> Overview</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-section="transactions"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-section="budgets"><i class="fas fa-chart-pie"></i> Budgets</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-section="goals"><i class="fas fa-bullseye"></i> Goals</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-section="reports"><i class="fas fa-chart-line"></i> Reports</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" data-section="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li class="nav-item" style="margin-top: 2rem; font-size: 0.875rem; color: var(--gray); text-align: center;">
+                    &copy; StashU @2025
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <!-- Header -->
+            <div class="header">
+                <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+                <h1 id="sectionTitle">Dashboard Overview</h1>
+                <div class="user-menu">
+                    <span class="welcome-message">Welcome,</span>
+                    <span class="user-name" id="userName"></span>
+                    <div class="user-avatar" id="userAvatar"></div>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div class="dashboard-section" id="overviewSection">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-wallet"></i>
+                        <div class="stat-value">$2,450</div>
+                        <div class="stat-label">Current Balance</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-arrow-up"></i>
+                        <div class="stat-value">$1,200</div>
+                        <div class="stat-label">Monthly Income</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-arrow-down"></i>
+                        <div class="stat-value">$850</div>
+                        <div class="stat-label">Monthly Expenses</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-piggy-bank"></i>
+                        <div class="stat-value">$350</div>
+                        <div class="stat-label">Monthly Savings</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Monthly Spending</h3>
+                        <div class="card-actions">
+                            <a href="#">View Details</a>
+                        </div>
+                    </div>
+                    <canvas id="spendingChart" height="300"></canvas>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Transactions</h3>
+                        <div class="card-actions">
+                            <a href="#" data-section="transactions">View All</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="transaction-table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="transaction-category">
+                                            <div class="category-icon"><i class="fas fa-utensils"></i></div>
+                                            <span>Food</span>
+                                        </div>
+                                    </td>
+                                    <td>Campus Cafeteria</td>
+                                    <td>Today</td>
+                                    <td class="expense">-$12.50</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="transaction-category">
+                                            <div class="category-icon"><i class="fas fa-book"></i></div>
+                                            <span>Education</span>
+                                        </div>
+                                    </td>
+                                    <td>Textbook Purchase</td>
+                                    <td>Yesterday</td>
+                                    <td class="expense">-$45.99</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="transaction-category">
+                                            <div class="category-icon"><i class="fas fa-money-bill-wave"></i></div>
+                                            <span>Income</span>
+                                        </div>
+                                    </td>
+                                    <td>Part-time Job</td>
+                                    <td>May 15</td>
+                                    <td class="income">+$250.00</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="transaction-category">
+                                            <div class="category-icon"><i class="fas fa-subway"></i></div>
+                                            <span>Transportation</span>
+                                        </div>
+                                    </td>
+                                    <td>Monthly Bus Pass</td>
+                                    <td>May 10</td>
+                                    <td class="expense">-$35.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Section -->
+            <div class="dashboard-section" id="transactionsSection" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">All Transactions</h3>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Transaction</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="transaction-table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="transaction-category">
+                                            <div class="category-icon"><i class="fas fa-utensils"></i></div>
+                                            <span>Food</span>
+                                        </div>
+                                    </td>
+                                    <td>Campus Cafeteria</td>
+                                    <td>Today</td>
+                                    <td class="expense">-$12.50</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="transaction-category">
+                                            <div class="category-icon"><i class="fas fa-book"></i></div>
+                                            <span>Education</span>
+                                        </div>
+                                    </td>
+                                    <td>Textbook Purchase</td>
+                                    <td>Yesterday</td>
+                                    <td class="expense">-$45.99</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="transaction-category">
+                                            <div class="category-icon"><i class="fas fa-money-bill-wave"></i></div>
+                                            <span>Income</span>
+                                        </div>
+                                    </td>
+                                    <td>Part-time Job</td>
+                                    <td>May 15</td>
+                                    <td class="income">+$250.00</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="transaction-category">
+                                            <div class="category-icon"><i class="fas fa-subway"></i></div>
+                                            <span>Transportation</span>
+                                        </div>
+                                    </td>
+                                    <td>Monthly Bus Pass</td>
+                                    <td>May 10</td>
+                                    <td class="expense">-$35.00</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-outline"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Budgets Section -->
+            <div class="dashboard-section" id="budgetsSection" style="display: none;">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-chart-pie"></i>
+                        <div class="stat-value">$850</div>
+                        <div class="stat-label">Total Budget</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="stat-value">$620</div>
+                        <div class="stat-label">Amount Spent</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-percentage"></i>
+                        <div class="stat-value">73%</div>
+                        <div class="stat-label">Budget Used</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <div class="stat-value">$230</div>
+                        <div class="stat-label">Remaining</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Budget Categories</h3>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Budget</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="transaction-table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Budgeted</th>
+                                    <th>Spent</th>
+                                    <th>Remaining</th>
+                                    <th>Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="transaction-category">
+                                            <div class="category-icon"><i class="fas fa-utensils"></i></div>
+                                            <span>Food</span>
+                                        </div>
+                                    </td>
+                                    <td>$300</td>
+                                    <td>$220</td>
+                                    <td>$80</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar" role="progressbar" style="width: 73%;" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="transaction-category">
+                                            <div class="category-icon"><i class="fas fa-book"></i></div>
+                                            <span>Education</span>
+                                        </div>
+                                    </td>
+                                    <td>$200</td>
+                                    <td>$180</td>
+                                    <td>$20</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="transaction-category">
+                                            <div class="category-icon"><i class="fas fa-subway"></i></div>
+                                            <span>Transportation</span>
+                                        </div>
+                                    </td>
+                                    <td>$100</td>
+                                    <td>$75</td>
+                                    <td>$25</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="transaction-category">
+                                            <div class="category-icon"><i class="fas fa-film"></i></div>
+                                            <span>Entertainment</span>
+                                        </div>
+                                    </td>
+                                    <td>$150</td>
+                                    <td>$95</td>
+                                    <td>$55</td>
+                                    <td>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar" role="progressbar" style="width: 63%;" aria-valuenow="63" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goals Section -->
+            <div class="dashboard-section" id="goalsSection" style="display: none;">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-bullseye"></i>
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Active Goals</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="stat-value">1</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-piggy-bank"></i>
+                        <div class="stat-value">$1,250</div>
+                        <div class="stat-label">Total Saved</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-trophy"></i>
+                        <div class="stat-value">42%</div>
+                        <div class="stat-label">Overall Progress</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">My Savings Goals</h3>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Goal</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>New Laptop</h5>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>$800 of $1,200</span>
+                                        <span>67%</span>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 12px;">
+                                        <div class="progress-bar" role="progressbar" style="width: 67%;" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <p class="text-muted">Target date: August 30, 2023</p>
+                                    <button class="btn btn-outline btn-sm">Add Funds</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>Spring Break Trip</h5>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>$450 of $800</span>
+                                        <span>56%</span>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 12px;">
+                                        <div class="progress-bar" role="progressbar" style="width: 56%;" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <p class="text-muted">Target date: March 15, 2024</p>
+                                    <button class="btn btn-outline btn-sm">Add Funds</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div class="dashboard-section" id="reportsSection" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Financial Reports</h3>
+                        <div class="card-actions">
+                            <select class="form-select form-select-sm" style="width: auto;">
+                                <option>Last 7 Days</option>
+                                <option>Last 30 Days</option>
+                                <option selected>Last 3 Months</option>
+                                <option>Last 6 Months</option>
+                                <option>This Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="reportsChart" height="300"></canvas>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Income vs Expenses</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="incomeExpenseChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="dashboard-section" id="settingsSection" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Account Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="settingsForm">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="settingsName">Full Name</label>
+                                        <input type="text" id="settingsName" class="form-control" value="Alex Johnson">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="settingsEmail">Email Address</label>
+                                        <input type="email" id="settingsEmail" class="form-control" value="student@example.com">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="mb-3">Change Password</h5>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="currentPassword">Current Password</label>
+                                        <input type="password" id="currentPassword" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="newPassword">New Password</label>
+                                        <input type="password" id="newPassword" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="confirmNewPassword">Confirm New Password</label>
+                                        <input type="password" id="confirmNewPassword" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-outline">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Notification Preferences</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="notifBudget" checked>
+                            <label class="form-check-label" for="notifBudget">Budget alerts</label>
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="notifBill" checked>
+                            <label class="form-check-label" for="notifBill">Bill reminders</label>
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="notifGoal" checked>
+                            <label class="form-check-label" for="notifGoal">Goal progress updates</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="notifWeekly" checked>
+                            <label class="form-check-label" for="notifWeekly">Weekly summary</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const landingPage = document.getElementById('landingPage');
+        const authContainer = document.getElementById('authContainer');
+        const dashboard = document.getElementById('dashboard');
+        const loginFormElement = document.getElementById('loginFormElement');
+        const signupFormElement = document.getElementById('signupFormElement');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const showSignupBtn = document.getElementById('showSignupBtn');
+        const showLoginBtn = document.getElementById('showLoginBtn');
+        const showAuth = document.getElementById('showAuth');
+        const showSignup = document.getElementById('showSignup');
+        const showFeatures = document.getElementById('showFeatures');
+        const sidebar = document.getElementById('sidebar');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const overlay = document.getElementById('overlay');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const dashboardSections = document.querySelectorAll('.dashboard-section');
+        const sectionTitle = document.getElementById('sectionTitle');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const toast = document.getElementById('toast');
+
+        // Sample user data (in a real app, this would come from your backend)
+        const users = [
+            { email: "student@example.com", password: "password123", name: "Alex Johnson" }
+        ];
+
+        // Current user
+        let currentUser = null;
+        let spendingChart = null;
+        let reportsChart = null;
+        let incomeExpenseChart = null;
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.style.backgroundColor = type === 'success' ? 'var(--success)' : 'var(--danger)';
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Validate email format
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Validate password strength
+        function isValidPassword(password) {
+            return password.length >= 6;
+        }
+
+        // Show auth container when Get Started is clicked
+        showAuth.addEventListener('click', (e) => {
+            e.preventDefault();
+            landingPage.style.display = 'none';
+            authContainer.style.display = 'flex';
+            loginFormElement.style.display = 'block';
+            signupFormElement.style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Show auth container when Get Started in hero is clicked
+        showSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            landingPage.style.display = 'none';
+            authContainer.style.display = 'flex';
+            loginFormElement.style.display = 'block';
+            signupFormElement.style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Show features section when Learn More is clicked
+        showFeatures.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Toggle between login and signup forms
+        showSignupBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginFormElement.style.display = 'none';
+            signupFormElement.style.display = 'block';
+        });
+
+        showLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupFormElement.style.display = 'none';
+            loginFormElement.style.display = 'block';
+        });
+
+        // Login form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Reset validation
+            document.getElementById('loginEmail').classList.remove('is-invalid');
+            document.getElementById('loginPassword').classList.remove('is-invalid');
+            document.getElementById('loginEmailError').textContent = '';
+            document.getElementById('loginPasswordError').textContent = '';
+            
+            let isValid = true;
+            
+            // Validate email
+            if (!email) {
+                document.getElementById('loginEmail').classList.add('is-invalid');
+                document.getElementById('loginEmailError').textContent = 'Email is required';
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                document.getElementById('loginEmail').classList.add('is-invalid');
+                document.getElementById('loginEmailError').textContent = 'Please enter a valid email';
+                isValid = false;
+            }
+            
+            // Validate password
+            if (!password) {
+                document.getElementById('loginPassword').classList.add('is-invalid');
+                document.getElementById('loginPasswordError').textContent = 'Password is required';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Simple validation (in a real app, you would check against your backend)
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                landingPage.style.display = 'none';
+                authContainer.style.display = 'none';
+                dashboard.style.display = 'flex';
+                userName.textContent = user.name;
+                userAvatar.textContent = user.name.split(' ').map(n => n[0]).join('');
+                initializeDashboard();
+                
+                showToast('Login successful!');
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                document.getElementById('loginPassword').classList.add('is-invalid');
+                document.getElementById('loginPasswordError').textContent = 'Invalid email or password';
+            }
+        });
+
+        // Signup form submission
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            
+            // Reset validation
+            document.getElementById('signupName').classList.remove('is-invalid');
+            document.getElementById('signupEmail').classList.remove('is-invalid');
+            document.getElementById('signupPassword').classList.remove('is-invalid');
+            document.getElementById('signupConfirmPassword').classList.remove('is-invalid');
+            document.getElementById('signupNameError').textContent = '';
+            document.getElementById('signupEmailError').textContent = '';
+            document.getElementById('signupPasswordError').textContent = '';
+            document.getElementById('signupConfirmPasswordError').textContent = '';
+            
+            let isValid = true;
+            
+            // Validate name
+            if (!name) {
+                document.getElementById('signupName').classList.add('is-invalid');
+                document.getElementById('signupNameError').textContent = 'Name is required';
+                isValid = false;
+            }
+            
+            // Validate email
+            if (!email) {
+                document.getElementById('signupEmail').classList.add('is-invalid');
+                document.getElementById('signupEmailError').textContent = 'Email is required';
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                document.getElementById('signupEmail').classList.add('is-invalid');
+                document.getElementById('signupEmailError').textContent = 'Please enter a valid email';
+                isValid = false;
+            } else if (users.find(u => u.email === email)) {
+                document.getElementById('signupEmail').classList.add('is-invalid');
+                document.getElementById('signupEmailError').textContent = 'Email already exists';
+                isValid = false;
+            }
+            
+            // Validate password
+            if (!password) {
+                document.getElementById('signupPassword').classList.add('is-invalid');
+                document.getElementById('signupPasswordError').textContent = 'Password is required';
+                isValid = false;
+            } else if (!isValidPassword(password)) {
+                document.getElementById('signupPassword').classList.add('is-invalid');
+                document.getElementById('signupPasswordError').textContent = 'Password must be at least 6 characters';
+                isValid = false;
+            }
+            
+            // Validate confirm password
+            if (!confirmPassword) {
+                document.getElementById('signupConfirmPassword').classList.add('is-invalid');
+                document.getElementById('signupConfirmPasswordError').textContent = 'Please confirm your password';
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                document.getElementById('signupConfirmPassword').classList.add('is-invalid');
+                document.getElementById('signupConfirmPasswordError').textContent = 'Passwords do not match';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+
+            // In a real app, you would send this data to your backend
+            currentUser = { name, email, password };
+            users.push(currentUser);
+            
+            landingPage.style.display = 'none';
+            authContainer.style.display = 'none';
+            dashboard.style.display = 'flex';
+            userName.textContent = name;
+            userAvatar.textContent = name.split(' ').map(n => n[0]).join('');
+            initializeDashboard();
+            
+            showToast('Account created successfully!');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Mobile menu toggle
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        // Close sidebar when overlay is clicked
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Navigation between sections in dashboard
+        document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                link.classList.add('active');
+                
+                // Get the section to show
+                const section = link.getAttribute('data-section');
+                sectionTitle.textContent = link.textContent;
+                
+                // Hide all sections
+                dashboardSections.forEach(sec => {
+                    sec.style.display = 'none';
+                });
+                
+                // Show the selected section
+                document.getElementById(`${section}Section`).style.display = 'block';
+                
+                // Close mobile menu if open
+                if (sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // Navigation in main navbar
+        document.querySelectorAll('#navbarNav .nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                document.querySelectorAll('#navbarNav .nav-link').forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                link.classList.add('active');
+                
+                // Get the section to show
+                const section = link.getAttribute('data-section');
+                
+                if (section === 'home') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    document.getElementById(section).scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentUser) {
+                if (confirm(`Are you sure you want to log out, ${currentUser.name}?`)) {
+                    currentUser = null;
+                    landingPage.style.display = 'block';
+                    authContainer.style.display = 'none';
+                    dashboard.style.display = 'none';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    showToast('You have been logged out.');
+                }
+            }
+        });
+
+        // Initialize dashboard charts
+        function initializeDashboard() {
+            // Destroy existing charts if they exist
+            if (spendingChart) {
+                spendingChart.destroy();
+            }
+            if (reportsChart) {
+                reportsChart.destroy();
+            }
+            if (incomeExpenseChart) {
+                incomeExpenseChart.destroy();
+            }
+            
+            // Spending Chart
+            const spendingCtx = document.getElementById('spendingChart').getContext('2d');
+            spendingChart = new Chart(spendingCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Food', 'Transportation', 'Entertainment', 'Housing', 'Education', 'Other'],
+                    datasets: [{
+                        label: 'Monthly Spending',
+                        data: [320, 150, 180, 400, 250, 100],
+                        backgroundColor: [
+                            'rgba(67, 97, 238, 0.7)',
+                            'rgba(72, 149, 239, 0.7)',
+                            'rgba(76, 201, 240, 0.7)',
+                            'rgba(63, 55, 201, 0.7)',
+                            'rgba(247, 37, 133, 0.7)',
+                            'rgba(248, 150, 30, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(67, 97, 238, 1)',
+                            'rgba(72, 149, 239, 1)',
+                            'rgba(76, 201, 240, 1)',
+                            'rgba(63, 55, 201, 1)',
+                            'rgba(247, 37, 133, 1)',
+                            'rgba(248, 150, 30, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Reports Chart
+            const reportsCtx = document.getElementById('reportsChart').getContext('2d');
+            reportsChart = new Chart(reportsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Income',
+                        data: [1200, 1100, 1300, 1200, 1250, 1300],
+                        borderColor: 'rgba(76, 201, 240, 1)',
+                        backgroundColor: 'rgba(76, 201, 240, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }, {
+                        label: 'Expenses',
+                        data: [850, 900, 800, 950, 850, 900],
+                        borderColor: 'rgba(247, 37, 133, 1)',
+                        backgroundColor: 'rgba(247, 37, 133, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Income vs Expense Chart
+            const incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+            incomeExpenseChart = new Chart(incomeExpenseCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Income', 'Expenses'],
+                    datasets: [{
+                        data: [1250, 850],
+                        backgroundColor: [
+                            'rgba(76, 201, 240, 0.7)',
+                            'rgba(247, 37, 133, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(76, 201, 240, 1)',
+                            'rgba(247, 37, 133, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize the dashboard on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize the dashboard sections
+            dashboardSections.forEach(sec => {
+                sec.style.display = 'none';
+            });
+            document.getElementById('overviewSection').style.display = 'block';
+            
+            // Add animation to features on scroll
+            const featureCards = document.querySelectorAll('.feature-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = `fadeInUp 0.5s ease ${index * 0.1}s forwards`;
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            featureCards.forEach(card => {
+                card.style.opacity = '0';
+                observer.observe(card);
+            });
+            
+            // Check if user was previously logged in
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                landingPage.style.display = 'none';
+                authContainer.style.display = 'none';
+                dashboard.style.display = 'flex';
+                userName.textContent = currentUser.name;
+                userAvatar.textContent = currentUser.name.split(' ').map(n => n[0]).join('');
+                initializeDashboard();
+            }
+        });
+        
+        // Save user to localStorage when logged in
+        function saveUserToLocalStorage() {
+            if (currentUser) {
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+        }
+        
+        // Remove user from localStorage when logged out
+        function removeUserFromLocalStorage() {
+            localStorage.removeItem('currentUser');
+        }
+    </script>
+</body>
 </html>

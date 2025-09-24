@@ -4,7 +4,7 @@ import { FiPieChart, FiUser, FiArrowRight } from "react-icons/fi";
 
 export default function Navbar() {
   return (
-    <nav className="navbar">
+    <nav className="navbar navbar-expand-lg">
       <div className="navbar-container">
         <Link to="/" className="logo">
           <span className="logo-icon">💰</span>
@@ -12,7 +12,7 @@ export default function Navbar() {
         </Link>
         
         <div className="nav-links">
-          <Link to="/" className="nav-link active">
+          <Link to="/" className="nav-link active" aria-current="page" id="show-home">
             <FiPieChart className="nav-icon" />
             <span>Home</span>
           </Link>
@@ -24,7 +24,7 @@ export default function Navbar() {
             <FiArrowRight className="nav-icon" />
             <span>About</span>
           </Link>
-          <Link to="/auth" className="nav-cta">
+          <Link to="/showAuth" className="nav-cta">
             Get Started
           </Link>
         </div>

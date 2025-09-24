@@ -11,13 +11,12 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
+          <Route path='home' index element={<Home />} />
           <Route path="profile" element={<Profile />} /> {/* Add this line */}
           {/* Add other nested routes here */}
         </Route>
         <Route path="/dashboard/*" element={<Dashboard />} />
         <Route path="/auth" element={<Auth />} />
-        
       </Routes>
     </BrowserRouter>
   );
