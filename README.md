@@ -1,27 +1,43 @@
 # StashU – Student Finance Planner
 
-A student-focused finance management UI that helps track income, expenses, and goals.  
-Built with **React + TailwindCSS**.  
+A student-centered budgeting interface designed to help university students track income, expenses, and savings in a structured and simple way.
 
-🔗 **Live Demo:** [https://stashu-demo.netlify.app](https://effortless-eclair-73c02d.netlify.app/)  
-📂 **Repo:** [https://github.com/MalashaRemmy/stashu-demo](https://github.com/MalashaRemmy/stashu-demo)
+Built with React and TailwindCSS, focusing on clean architecture, reusable components, and responsive design.
+
+🔗 Live Demo: https://effortless-eclair-73c02d.netlify.app/  
+📂 Repository: https://github.com/MalashaRemmy/stashu-demo
+
+---
+
+## Problem
+
+Students often struggle to:
+- Track irregular income sources
+- Monitor daily expenses consistently
+- Understand savings progress over time
+
+StashU provides a lightweight interface for structured financial awareness and budgeting discipline.
 
 ---
 
 ## Features
-- Interactive UI for managing student budgets.
-- Categories for income, expenses, and savings.
-- Responsive design (mobile & desktop).
-- Clean architecture with reusable components.
+
+- Income and expense categorization
+- Savings tracking
+- Responsive design (mobile-first)
+- Component-based architecture
+- Reusable UI structure
+
+---
 
 ## Tech Stack
-- React (frontend framework)  
-- TailwindCSS (styling)  
-- Netlify (deployment)
 
-## Getting Started
-```bash
-git clone https://github.com/MalashaRemmy/stashu-demo.git
-cd stashu-demo
-npm install
-npm run dev   # for Vite
+- React
+- TailwindCSS
+- Vite
+- Netlify
+
+---
+
+## Project Structure
+
