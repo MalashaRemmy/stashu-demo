@@ -35,9 +35,22 @@ StashU provides a lightweight interface for structured financial awareness and b
 - React
 - TailwindCSS
 - Vite
-- Netlify
 
 ---
 
 ## Project Structure
 
+src/
+├── components/
+├── pages/
+├── hooks/
+└── utils/
+---
+
+## Getting Started
+
+```bash
+git clone https://github.com/MalashaRemmy/stashu-demo.git
+cd stashu-demo
+npm install
+npm run dev
