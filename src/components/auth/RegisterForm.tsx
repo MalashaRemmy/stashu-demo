@@ -1,104 +1,87 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '../ui/Button';
-import Input from '../ui/Input';
-import { Card } from '../ui/Card';
+// src/components/auth/RegisterForm.tsx
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-type RegisterFormProps = {
-  onSwitchMode: () => void;
-  // other register-specific props
-};
+interface Props {
+  onSwitchMode?: () => void;
+  passwordRequirements?: {
+    minLength?: number;
+    requireUppercase?: boolean;
+    requireNumber?: boolean;
+    requireSpecial?: boolean;
+  };
+}
 
-export default function RegisterForm({ onSwitchMode }: RegisterFormProps) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+export default function RegisterForm({ onSwitchMode = () => {}, passwordRequirements }: Props) {
+  const { register: doRegister, loading } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const validate = (pwd: string) => {
+    const rules = { minLength: 8, requireUppercase: true, requireNumber: true, requireSpecial: true, ...(passwordRequirements || {}) };
+
+    if (pwd.length < rules.minLength) return `Password must be at least ${rules.minLength} characters`;
+    if (rules.requireUppercase && !/[A-Z]/.test(pwd)) return "Password must contain an uppercase letter";
+    if (rules.requireNumber && !/[0-9]/.test(pwd)) return "Password must contain a number";
+    if (rules.requireSpecial && !/[!@#$%^&*(),.?":{}|<>]/.test(pwd)) return "Password must contain a special character";
+    return null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    setError(null);
+
+    const pwdError = validate(password);
+    if (pwdError) {
+      setError(pwdError);
       return;
     }
 
-    setLoading(true);
-    setError('');
-    
-    try {
-      // TODO: Replace with actual API call
-      // const response = await registerUser(formData);
-      console.log('Registration attempt:', formData);
-      navigate('/dashboard');
-    } catch (err: unknown) {
-      console.error('Registration error:', err);
-      setError('Registration failed. Please try again.');
-    } finally {
-      setLoading(false);
+    const res = await doRegister({ name: name.trim(), email: email.trim(), password, confirmPassword: password });
+    if (!res.success) {
+      setError(res.message || "Registration failed");
+      return;
     }
+
+    // on success, go to dashboard
+    navigate("/dashboard");
   };
 
   return (
-    <Card className="max-w-md w-full p-8">
-      <h2 className="text-2xl font-bold text-center mb-6 text-blue-800">Create Account</h2>
-      {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          label="Full Name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          label="Email"
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          label="Password"
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          minLength={6}
-        />
-        <Input
-          label="Confirm Password"
-          type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          required
-        />
-      
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Registering...' : 'Register'}
-        </Button>
-      </form>
-      <div className="mt-4 text-center">
-        <button 
-          onClick={onSwitchMode}
-          className="text-blue-600 hover:underline"
-        >
-          Already have an account? Login
-        </button>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && <div className="text-sm text-red-600">{error}</div>}
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Full name</label>
+        <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full border rounded p-2" required />
       </div>
-    </Card>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Email</label>
+        <input value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 w-full border rounded p-2" type="email" required />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Password</label>
+        <input value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 w-full border rounded p-2" type="password" required />
+        <p className="text-xs text-gray-500 mt-1">At least 8 chars, an uppercase, a number & a special char.</p>
+      </div>
+
+      <button className="w-full py-2 bg-purple-600 text-white rounded" disabled={loading}>
+        {loading ? "Creating account..." : "Create account"}
+      </button>
+
+      <p className="text-center text-sm text-gray-600">
+        Already have an account?{" "}
+        <button type="button" onClick={onSwitchMode} className="text-purple-600 underline">
+          Sign in
+        </button>
+      </p>
+    </form>
   );
 }

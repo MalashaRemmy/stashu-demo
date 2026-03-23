@@ -1,7 +1,7 @@
 // Update the import path to where Button is actually exported from
-import { Button } from '../ui/Button';
-import { formatCurrency, } from '../../lib/utils/currencyFormatter';
-import { formatDate } from '../../lib/utils/dateUtils';
+import { Button } from '../../ui/Button';
+import { formatCurrency, } from '../../../lib/utils/currencyFormatter';
+import { formatDate } from '../../../lib/utils/dateUtils';
 
 interface IncomeListProps {
   incomes: Income[];

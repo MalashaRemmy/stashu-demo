@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../lib/hooks/useAuth'; // Assuming you have an auth context
+import { useAuth } from '../../../my-app/src/hooks/useAuth'; // Assuming you have an auth context
 
 export default function Header() {
   const [showDropdown, setShowDropdown] = useState(false);

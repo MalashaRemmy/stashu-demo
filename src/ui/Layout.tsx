@@ -1,26 +1,28 @@
 import React, { Suspense } from 'react';
-import { Outlet, useLocation, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-//import { RootState } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { Navbar, Sidebar, Notification, LoadingSpinner } from './index';
 
-const publicRoutes = ['/login', '/register'];
+const publicRoutes = ['/', '/auth'];
 
 export default function Layout() {
   const location = useLocation();
-  const { isAuthenticated } = useSelector((state: any) => state.auth);
+  const { loading } = useAuth();
   
-  // Redirect to login if not authenticated and trying to access protected route
-  if (!isAuthenticated && !publicRoutes.includes(location.pathname)) {
-    return <Navigate to="/login" replace />;
-  }
-
-  // Don't show layout for auth pages
+  // Don't show layout for public pages
   if (publicRoutes.includes(location.pathname)) {
     return (
       <Suspense fallback={<LoadingSpinner size="large" />}>
         <Outlet />
       </Suspense>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner size="large" />
+      </div>
     );
   }
 

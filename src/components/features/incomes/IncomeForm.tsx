@@ -2,55 +2,62 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import type { ExpenseCategory } from '../../../types';
 
-const expenseSchema = z.object({
+const incomeSchema = z.object({
   amount: z.number().min(0.01, 'Amount must be greater than 0'),
-  category: z.enum(['food', 'accommodation', 'transportation', 'entertainment', 'education', 'healthcare', 'other']),
-  description: z.string().min(1, 'Description is required'),
+  source: z.string().min(1, 'Source is required'),
+  description: z.string().optional(),
+  frequency: z.enum(['one-time', 'weekly', 'monthly']),
   date: z.string().min(1, 'Date is required'),
 });
 
-type ExpenseFormData = z.infer<typeof expenseSchema>;
+type IncomeFormData = z.infer<typeof incomeSchema>;
 
-interface ExpenseFormProps {
-  onSubmit: (data: ExpenseFormData) => void;
+interface IncomeFormProps {
+  onSubmit: (data: any) => void;
   onCancel?: () => void;
   isLoading?: boolean;
   initialData?: any;
 }
 
-export const ExpenseForm: React.FC<ExpenseFormProps> = ({ 
+export default function IncomeForm({ 
   onSubmit, 
   onCancel, 
   isLoading = false,
   initialData = undefined
-}) => {
+}: IncomeFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<ExpenseFormData>({
-    resolver: zodResolver(expenseSchema),
+  } = useForm<IncomeFormData>({
+    resolver: zodResolver(incomeSchema),
     defaultValues: {
       date: new Date().toISOString().split('T')[0],
+      frequency: 'one-time',
     },
   });
 
-  const handleFormSubmit = (data: ExpenseFormData) => {
+  const handleFormSubmit = (data: IncomeFormData) => {
     onSubmit(data);
     reset();
   };
 
-  const categories: { value: ExpenseCategory; label: string }[] = [
-    { value: 'food', label: 'Food & Dining' },
-    { value: 'accommodation', label: 'Accommodation' },
-    { value: 'transportation', label: 'Transportation' },
-    { value: 'entertainment', label: 'Entertainment' },
-    { value: 'education', label: 'Education' },
-    { value: 'healthcare', label: 'Healthcare' },
-    { value: 'other', label: 'Other' },
+  const frequencyOptions = [
+    { value: 'one-time', label: 'One Time' },
+    { value: 'weekly', label: 'Weekly' },
+    { value: 'monthly', label: 'Monthly' },
+  ];
+
+  const commonSources = [
+    'Part-time Job',
+    'Scholarship',
+    'Allowance',
+    'Freelance',
+    'Internship',
+    'Gift',
+    'Other',
   ];
 
   return (
@@ -73,36 +80,52 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Category
+          Source
         </label>
         <select
-          {...register('category')}
+          {...register('source')}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="">Select a category</option>
-          {categories.map(category => (
-            <option key={category.value} value={category.value}>
-              {category.label}
+          <option value="">Select income source</option>
+          {commonSources.map(source => (
+            <option key={source} value={source}>
+              {source}
             </option>
           ))}
         </select>
-        {errors.category && (
-          <p className="mt-1 text-sm text-red-600">{errors.category.message}</p>
+        {errors.source && (
+          <p className="mt-1 text-sm text-red-600">{errors.source.message}</p>
         )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Description
+          Description (Optional)
         </label>
         <input
           {...register('description')}
           type="text"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="What was this expense for?"
+          placeholder="Additional details about this income"
         />
-        {errors.description && (
-          <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Frequency
+        </label>
+        <select
+          {...register('frequency')}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {frequencyOptions.map(option => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        {errors.frequency && (
+          <p className="mt-1 text-sm text-red-600">{errors.frequency.message}</p>
         )}
       </div>
 
@@ -124,9 +147,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+          className="flex-1 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
         >
-          {isLoading ? 'Adding...' : 'Add Expense'}
+          {isLoading ? 'Adding...' : 'Add Income'}
         </button>
         {onCancel && (
           <button
@@ -140,4 +163,4 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       </div>
     </form>
   );
-};
+}

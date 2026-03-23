@@ -1,113 +1,181 @@
-import { useAuth } from '../lib/hooks/useAuth';
-import { Button, Input } from '../components/ui';
-import { Card } from '../components/ui/Card';
-import { useNavigate } from 'react-router-dom';
-import { updateUserProfile } from '../components/services/userService';
-
-// (Removed duplicate updateUserProfile and related code)
-
-// Profile component
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
+import { useNavigate } from 'react-router-dom';
 
-const Profile: React.FC = () => {
+export default function Profile() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
-
-    try {
-      await updateUserProfile({
-        userId: user?.id || '',
-        name: formData.name,
-        email: formData.email
-      });
-      // Optionally refresh user data here
-      navigate('/dashboard');
-    } catch (err) {
-      setError('Failed to update profile. Please try again.');
-      console.error('Profile update error:', err);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSave = () => {
+    // In a real app, this would update the user profile
+    console.log('Saving profile:', formData);
+    setIsEditing(false);
   };
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
+  const financialStats = [
+    { label: "Total Income", value: "$2,450", change: "+12%" },
+    { label: "Total Expenses", value: "$1,890", change: "-5%" },
+    { label: "Savings Rate", value: "23%", change: "+3%" },
+    { label: "Goals Achieved", value: "3/5", change: "60%" }
+  ];
+
   return (
-    <div className="max-w-md mx-auto py-8">
-      <Card className="p-6">
-        <h2 className="text-2xl font-bold text-center mb-6 text-blue-800">
-          User Profile
-        </h2>
-        
-        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+        >
+          Logout
+        </button>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          
-          <Input
-            label="Email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-
-          <div className="flex space-x-4 pt-4">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Saving...' : 'Save Changes'}
-            </Button>
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Profile Information */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Personal Information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              ) : (
+                <p className="text-gray-900">{user?.name}</p>
+              )}
+            </div>
             
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={() => navigate(-1)}
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              {isEditing ? (
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              ) : (
+                <p className="text-gray-900">{user?.email}</p>
+              )}
+            </div>
 
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <Button
-            variant="destructive"
-            className="w-full"
-            onClick={() => {
-              logout();
-              navigate('/login');
-            }}
-          >
-            Logout
-          </Button>
-        </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Member Since</label>
+              <p className="text-gray-900">{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</p>
+            </div>
+
+            <div className="flex space-x-2 pt-4">
+              {isEditing ? (
+                <>
+                  <button
+                    onClick={handleSave}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Edit Profile
+                </button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Financial Overview */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Financial Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-4">
+              {financialStats.map((stat, index) => (
+                <div key={index} className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-2xl font-bold text-blue-600">{stat.value}</div>
+                  <div className="text-sm text-gray-600">{stat.label}</div>
+                  <div className="text-xs text-green-600">{stat.change}</div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Settings</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-medium">Email Notifications</h3>
+              <p className="text-sm text-gray-600">Receive updates about your financial goals</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" className="sr-only peer" defaultChecked />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-medium">Budget Alerts</h3>
+              <p className="text-sm text-gray-600">Get notified when approaching budget limits</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" className="sr-only peer" defaultChecked />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-medium">Dark Mode</h3>
+              <p className="text-sm text-gray-600">Switch to dark theme</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" className="sr-only peer" />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+        </CardContent>
       </Card>
     </div>
   );
-};
-
-export default Profile;
+}

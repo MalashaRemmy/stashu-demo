@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import IncomeForm from '../components/incomes/IncomeForm';
-import IncomeList from '../components/incomes/IncomeList';
+import IncomeForm from '../components/features/incomes/IncomeForm';
+import IncomeList from '../components/features/incomes/IncomeList';
 // Correct the import path for Button
 import {Button} from '../components/ui/Button';
 // import { Income } from './types';
@@ -28,13 +28,7 @@ export default function Incomes() {
   const [editingIncome, setEditingIncome] = useState<Income | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (data: {
-    amount: number;
-    source: string;
-    description: string;
-    date: string;
-    frequency: string;
-  }) => {
+  const handleSubmit = (data: any) => {
     setIsSubmitting(true);
     
     // Simulate API call

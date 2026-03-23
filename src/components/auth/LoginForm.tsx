@@ -1,99 +1,118 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaFacebook, FaGoogle, FaTwitter } from 'react-icons/fa';
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useAuth } from '../../context/AuthContext';
+import LoadingSpinner from '../ui/LoadingSpinner';
+import type { LoginFormData } from '../../types';
 
-type AuthFormProps = {
-  onSwitchMode: () => void;
-  // Add other props if needed
-};
+const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
+});
 
-export default function LoginForm({ onSwitchMode }: AuthFormProps) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+type LoginFormInputs = z.infer<typeof loginSchema>;
+
+interface LoginFormProps {
+  onSwitchMode?: () => void;
+}
+
+export const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode = () => {} }) => {
+  const { login, loading } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   
+  const from = (location.state as any)?.from?.pathname || '/dashboard';
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<LoginFormInputs>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
+    const result = await login(data);
+    
+    if (result.success) {
+      navigate(from, { replace: true });
+    } else {
+      setError('root', { 
+        type: 'manual', 
+        message: result.message || 'Login failed. Please try again.' 
+      });
+    }
+  };
+
   return (
-    <div className="auth-container">
-      <div className="auth-illustration">
-        <div className="illustration-content">
-          <h1>Finance Tracking</h1>
-          <img 
-            src="https://illustrations.popsy.co/amber/digital-nomad.svg" 
-            alt="Personal Finance" 
-            className="auth-image"
-          />
-          <p className="illustration-text">
-            Track your expenses, manage budgets, and achieve your financial goals
-          </p>
-        </div>
+    <div className="w-full max-w-md mx-auto">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-gray-900">Welcome back</h2>
+        <p className="text-gray-600 mt-2">Sign in to your StashU account</p>
       </div>
 
-      <div className="auth-form-container">
-        <div className="auth-form">
-          <div className="form-header">
-            <h2>Welcome Back</h2>
-            <p>Sign in to continue your financial journey</p>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {errors.root && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+            <p className="text-sm text-red-600">{errors.root.message}</p>
           </div>
+        )}
 
-          <form className="login-form">
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="form-input"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                className="form-input"
-              />
-              <Link to="/forgot-password" className="forgot-password">
-                Forgot password?
-              </Link>
-            </div>
-
-            <button type="submit" className="auth-button primary">
-              Sign In
-            </button>
-
-            <div className="social-divider">
-              <span>Or sign in with</span>
-            </div>
-
-            <div className="social-buttons">
-              <button type="button" className="social-button facebook">
-                <FaFacebook className="social-icon" />
-                Facebook
-              </button>
-              <button type="button" className="social-button google">
-                <FaGoogle className="social-icon" />
-                Google
-              </button>
-              <button type="button" className="social-button twitter">
-                <FaTwitter className="social-icon" />
-                Twitter
-              </button>
-            </div>
-
-            <div className="auth-footer">
-              Don't have an account?{' '}
-              <Link to="/register" className="auth-link">
-                Sign Up
-              </Link>
-            </div>
-          </form>
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            Email address
+          </label>
+          <input
+            {...register('email')}
+            type="email"
+            id="email"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="student@university.edu"
+          />
+          {errors.email && (
+            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+          )}
         </div>
-      </div>
+
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            Password
+          </label>
+          <input
+            {...register('password')}
+            type="password"
+            id="password"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter your password"
+          />
+          {errors.password && (
+            <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? <LoadingSpinner size="small" /> : 'Sign in'}
+        </button>
+
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={onSwitchMode}
+            className="text-sm text-blue-600 hover:text-blue-500 font-medium"
+          >
+            Don't have an account? Sign up
+          </button>
+        </div>
+      </form>
     </div>
   );
-}
+};
+
+export default LoginForm;

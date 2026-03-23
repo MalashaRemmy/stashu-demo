@@ -4,7 +4,7 @@ import ExpenseList from '../components/features/expenses/ExpenseList';
 import { Button } from '../components/ui/Button';
 
 // Define this type in a shared types file (types.ts) and import it instead
-export type ExpenseCategory = 'Food' | 'Housing' | 'Transportation' | 'Other';
+export type ExpenseCategory = 'food' | 'accommodation' | 'transportation' | 'entertainment' | 'education' | 'healthcare' | 'other';
 
 type Expense = {
   id: string;
@@ -17,15 +17,15 @@ type Expense = {
 
 export default function Expenses() {
   const [expenses, setExpenses] = useState<Expense[]>([
-    { id: '1', amount: 25.50, category: 'Food', description: 'Lunch with friends', date: '2023-05-15' },
-    { id: '2', amount: 120, category: 'Housing', description: 'Internet bill', date: '2023-05-10' },
-    { id: '3', amount: 45, category: 'Transportation', description: 'Monthly bus pass', date: '2023-05-01' },
+    { id: '1', amount: 25.50, category: 'food', description: 'Lunch with friends', date: '2023-05-15' },
+    { id: '2', amount: 120, category: 'accommodation', description: 'Internet bill', date: '2023-05-10' },
+    { id: '3', amount: 45, category: 'transportation', description: 'Monthly bus pass', date: '2023-05-01' },
   ]);
   const [showForm, setShowForm] = useState(false);
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (data: Omit<Expense, 'id'>) => {
+  const handleSubmit = (data: { amount: number; category: ExpenseCategory; description: string; date: string }) => {
     setIsSubmitting(true);
     
     // Simulate API call
@@ -82,11 +82,7 @@ export default function Expenses() {
         />
       )}
 
-      <ExpenseList
-        expenses={expenses}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <ExpenseList />
     </div>
   );
 }

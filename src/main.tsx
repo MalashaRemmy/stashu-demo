@@ -1,24 +1,20 @@
-
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { Provider } from 'react-redux'
-import { store } from './components/store'
-import App from './App'
-import globals from '../assets/styles/globals.css';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
 import { AuthProvider } from './context/AuthContext';
-
-// main.tsx
+import ErrorBoundary from './components/ui/ErrorBoundary';
+import './assets/styles/globals.css';
 import './assets/fonts/font-face.css';
 
-const rootElement = document.getElementById('root')
-if (!rootElement) throw new Error('Root element not found')
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Root element not found');
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <Provider store={store}>
+    <ErrorBoundary>
       <AuthProvider>
         <App />
       </AuthProvider>
-    </Provider>
+    </ErrorBoundary>
   </React.StrictMode>
-)
+);
